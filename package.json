@@ -4,11 +4,26 @@
   "main": "index.js",
   "author": "Nick Osborn",
   "license": "MIT",
-  "dependencies": {},
-  "scripts": {
-    "test": "jest"
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "^3.4.1"
   },
-  "devDependencies": {
-    "jest": "^26.2.2"
+  "scripts": {
+    "test": "jest",
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

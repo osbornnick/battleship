@@ -1,14 +1,25 @@
 const { Player, AI } = require('./Player');
 
 class Game {
+
     constructor(players = [new Player(), new AI()]) {
         this.players = players;
         this.whoseTurn = 1;
     }
 
+    Play() {
+        while (this.players.every(player => !player.gameboard.isGameOver())) {
+            let move = null;
+            while (!move) {
+                move = getMove(); // this doesn't do anything yet
+            }
+            this.playTurn(move);
+        }
+    }
+
     playTurn(move) {
         const enemy = this.playerReceiving();
-        enemy.receiveHit(move);
+        enemy.gameboard.receiveHit(move);
         this.toggleWhoseTurn();
     }
 
@@ -18,8 +29,8 @@ class Game {
 
     playerReceiving() {
         return this.players.find(player => {
-         player.order !== this.whoseTurn
-        })    
+            player.order !== this.whoseTurn
+        })
     }
 
     initializeBoard(gameboard) {
@@ -35,7 +46,7 @@ class Game {
             [1, [6, 6]],
             [1, [8, 4]],
         ]
-        
+
         shipStartingPositions.forEach(ship => {
             gameboard.place(...ship);
         })

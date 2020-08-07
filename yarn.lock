@@ -1805,6 +1805,11 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
+PubSub@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/PubSub/-/PubSub-3.6.0.tgz#b0c79ae78a7a140752b10bd90b1cfbde61962096"
+  integrity sha512-pPMeGmwSlf2DnfXcncYWxiPRZdQ9FQkd9LA13yMIKKpWC0djgEjEEUdrQVDJvJ3T2FXFSMadymQUGSd74XtdvQ==
+
 abab@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.4.tgz#6dfa57b417ca06d21b2478f0e638302f99c2405c"

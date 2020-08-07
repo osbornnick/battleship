@@ -1,0 +1,26 @@
+@tailwind base;
+
+
+@tailwind components;
+
+@tailwind utilities;
+
+.gameboard {
+    display: grid;
+    grid-template-columns: repeat(10, 35px);
+    grid-template-rows: repeat(10, 35px);
+}
+
+.btn {
+    @apply bg-blue-500;
+    @apply text-white;
+    @apply font-bold;
+    @apply py-2;
+    @apply px-4 ;
+    @apply rounded;
+    @apply mt-5;
+}
+
+.btn:hover {
+    @apply bg-blue-700
+}

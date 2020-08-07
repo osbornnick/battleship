@@ -5,23 +5,15 @@ class Game {
     constructor(players = [new Player(1), new AI(2)]) {
         this.players = players;
         this.whoseTurn = 1;
+
+        this.playAITurn = this.playAITurn.bind(this);
+        this.toggleWhoseTurn = this.toggleWhoseTurn.bind(this);
+        this.playerReceiving = this.playerReceiving.bind(this);
+        this.playerShooting = this.playerShooting.bind(this);
     }
 
-    Play() {
-        while (this.players.every(player => !player.gameboard.isGameOver())) {
-            let move = null;
-            while (!move) {
-                console.log("waiting for move")
-                // move = getMove();
-            }
-            this.playTurn(move);
-        }
-    }
-
-    playTurn(move) {
-        const enemy = this.playerReceiving();
-        enemy.gameboard.receiveHit(move);
-        this.toggleWhoseTurn();
+    playAITurn() {
+        this.playerShooting().move(this.playerReceiving().gameboard)
     }
 
     toggleWhoseTurn() {
@@ -30,6 +22,10 @@ class Game {
 
     playerReceiving() {
         return this.players.find(player => player.order !== this.whoseTurn)
+    }
+
+    playerShooting() {
+        return this.players.find(player => player.order === this.whoseTurn)
     }
 
     initializeBoard(gameboard) {
@@ -47,7 +43,6 @@ class Game {
         ]
 
         shipStartingPositions.forEach(ship => {
-            //console.log(ship)
             gameboard.place(...ship);
         })
     }

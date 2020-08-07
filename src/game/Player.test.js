@@ -1,5 +1,5 @@
 const { Player, AI } = require('./Player');
-const { gameboardFactory } = require('./Gameboard');
+const { Gameboard } = require('./Gameboard');
 
 test('Player has gameboard', () => {
     const p = new Player();
@@ -8,7 +8,7 @@ test('Player has gameboard', () => {
 
 test('Player can make plays on enemy gameboard', () => {
     const p = new Player();
-    const enemyGameboard = gameboardFactory();
+    const enemyGameboard = new Gameboard();
     const mockReceiveHit = jest.fn((x, y) => true)
     enemyGameboard.receiveHit = mockReceiveHit;
     p.move(1, 1, enemyGameboard);
@@ -17,7 +17,7 @@ test('Player can make plays on enemy gameboard', () => {
 
 test('AI can make moves', () => {
     const ai = new AI();
-    const enemyGameboard = gameboardFactory();
+    const enemyGameboard = new Gameboard();
     const mockReceiveHit = jest.fn((x, y) => true)
     enemyGameboard.receiveHit = mockReceiveHit;
     ai.move(enemyGameboard);

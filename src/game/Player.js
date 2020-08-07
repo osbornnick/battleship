@@ -1,12 +1,11 @@
-const {
-    gameboardFactory
-} = require('./Gameboard');
+const { Gameboard } = require('./Gameboard');
 
 class Player {
     constructor(order = 1) {
-        this.gameboard = gameboardFactory();
+        this.gameboard = new Gameboard();
         this.moves = [];
         this.order = order;
+        this.isAI = false;
     }
 
     move(x, y, enemyGameboard) {
@@ -17,11 +16,12 @@ class Player {
 
 class AI {
     constructor(order = 2) {
-        this.gameboard = gameboardFactory();
+        this.gameboard = new Gameboard();
         this.possibleMoves = [];
         this.generatePossibleMoves();
         this.moves = [];
         this.order = order;
+        this.isAI = true;
     }
 
     generatePossibleMoves() {

@@ -1,8 +1,8 @@
-const { gameboardFactory } = require('./Gameboard');
+const { Gameboard } = require('./Gameboard');
 const { shipFactory } = require('./Ship');
 
 test('ships is empty object on start', () => {
-    const {board} = gameboardFactory();
+    const board = new Gameboard().board;
     expect(board.length).toBe(10);
     expect(board[9].length).toBe(10);
     for (let i = 0; i < 10; i++) {
@@ -13,7 +13,7 @@ test('ships is empty object on start', () => {
 })
 
 test('can place ship on board', () => {
-    const game = gameboardFactory();
+    const game = new Gameboard();
     const length = 2;
     const pos = [5, 5];
     const [x, y] = pos;
@@ -23,7 +23,7 @@ test('can place ship on board', () => {
 })
 
 test('places ship ONLY where specified', () => {
-    const game = gameboardFactory();
+    const game = new Gameboard();
     const length = 4;
     const pos = [5, 9];
     const [x, y] = pos;
@@ -40,7 +40,7 @@ test('places ship ONLY where specified', () => {
 })
 
 test('can get x, y coordinate', () => {
-    const game = gameboardFactory();
+    const game = new Gameboard();
     const x = 1;
     const y = 2;
     game.place(1, [x, y], "v");
@@ -48,20 +48,20 @@ test('can get x, y coordinate', () => {
 })
 
 test('can hit ship', () => {
-    const game = gameboardFactory();
+    const game = new Gameboard();
     game.place(2, [5, 5], "h");
     game.receiveHit(6, 5);
     expect(game.loc(6, 5).ship.hits[1]).toBe(1);
 })
 
 test('hit can miss', () => {
-    const game = gameboardFactory();
+    const game = new Gameboard();
     game.receiveHit(0, 0);
     expect(game.misses[0]).toStrictEqual([0, 0])
 })
 
 test('game can report on all ships being sunk', () => {
-    const game = gameboardFactory();
+    const game = new Gameboard();
     game.place(1, [0, 0], "v");
     expect(game.isGameOver()).toBeFalsy();
     game.receiveHit(0, 0);
@@ -69,13 +69,13 @@ test('game can report on all ships being sunk', () => {
 })
 
 test('place refuses out of bounds placement', () => {
-    const game = gameboardFactory();
+    const game = new Gameboard();
     expect(() => {game.place(3, [9, 9])}).toThrow();
     expect(() => {game.place(2, [1, 9])}).toThrow();
 })
 
 test('cant place on occupied cell', () => {
-    game = gameboardFactory();
+    const game = new Gameboard();
     game.place(2, [1, 1]);
     expect(() => game.place(1, [1, 2])).toThrow();
 })

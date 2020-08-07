@@ -1,59 +1,65 @@
 const { shipFactory } = require('./Ship');
+const { createArray } = require('./util');
 
 const gameboardFactory = () => {
     function createBoard() {
-        board = new Array(10).fill(new Array(10))
+        let board = createArray(10, 10);
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
-                board[i][j] = {ship: null, indexInShip: null}
+                board[j][i] = {ship: false, indexInShip: null}
             }   
         }
         return board
     }
+
     return ({
         board: createBoard(),
+        loc(x, y) {
+            return this.board[y][x];
+        },
         ships: [],
         place(length, pos, orientation="v") {
-            let [x, y] = pos;
+            const [x, y] = pos;
             // throw error if OOB
             if (orientation === "v") {
-                if (length + y > 9) {
-                    throw new Error(`Placement vertcally OOB: ${length+y} > 9`)
+                if (length + y > 10) {
+                    throw new Error(`Placement vertically OOB: ${length+y} > 10`)
                 }
             } else if (orientation === "h") {
-               if (length + x > 9) {
-                throw new Error(`Placement horizontally OOB: ${length+x} > 9`)
+               if (length + x > 10) {
+                   throw new Error(`Placement horizontally OOB: ${length+x} > 10`)
                }
             }
-
+            // throw error if overlap
             for (let i = 0; i < length; i++) {
-                let X = x;
-                let Y = y;
-                if (board[X][Y].ship) {
-                    throw new Error(`Cannot place on coordinate (${x}, ${y}), occupied by ${board[x][y].ship}`)
-                };
                 if (orientation === "v") {
-                    X++;
+                    if (this.loc(x, y+i).ship) {
+                        const printer = JSON.stringify(this.loc(x, y+i));
+                        throw new Error(`Cannot place on coordinate (${x}, ${y+i}), occupied by ${printer}`)
+                    };
                 } else if (orientation === "h") {
-                    Y++;
+                    if (this.loc(x+i, y).ship) {
+                        const printer = JSON.stringify(this.loc(x+i, y));
+                        throw new Error(`Cannot place on coordinate (${x+i}, ${y}), occupied by ${printer}`)
+                    };
                 }
             };
 
             const ship = shipFactory(length);
+            this.ships.push(ship);
             for (let i = 0; i < length; i++) {
-                board[x][y].ship = ship;
-                this.ships.push(ship);
-                board[x][y].indexInShip = i;
                 if (orientation === "v") {
-                    y++;
+                    this.loc(x, y+i).ship = ship;
+                    this.loc(x, y+i).indexInShip = i;
                 } else if (orientation === "h") {
-                    x++;
+                    this.loc(x+i, y).ship = ship;
+                    this.loc(x+i, y).indexInShip = i;
                 }
-            }
+            };
         },
-        misses: new Array(),
+        misses: [],
         receiveHit(x, y) {
-            const { ship, indexInShip } = board[x][y];
+            const { ship, indexInShip } = this.loc(x, y);
             if (ship) {
                 ship.hit(indexInShip);
             } else {

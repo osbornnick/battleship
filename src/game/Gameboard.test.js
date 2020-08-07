@@ -4,7 +4,12 @@ const { shipFactory } = require('./Ship');
 test('ships is empty object on start', () => {
     const {board} = gameboardFactory();
     expect(board.length).toBe(10);
-    expect(board[0].length).toBe(10);
+    expect(board[9].length).toBe(10);
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            expect(board[i][j].ship).toBeFalsy();
+        }
+    }
 })
 
 test('can place ship on board', () => {
@@ -14,14 +19,39 @@ test('can place ship on board', () => {
     const [x, y] = pos;
     const orientation = "v";
     game.place(length, pos, orientation);
-    expect(game.board[x][y].ship).toEqual(game.board[x][y+1].ship);
+    expect(game.loc(x, y).ship).toEqual(game.loc(x, y+1).ship);
+})
+
+test('places ship ONLY where specified', () => {
+    const game = gameboardFactory();
+    const length = 4;
+    const pos = [5, 9];
+    const [x, y] = pos;
+    game.place(length, pos, "h");
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            if (i >= 5 && i <= 8 && j === 9) {
+                expect(game.loc(i, j).ship).toEqual(game.loc(x, y).ship);
+            } else {
+                expect(game.loc(i, j).ship).not.toEqual(game.loc(x, y).ship);
+            }
+        }
+    }
+})
+
+test('can get x, y coordinate', () => {
+    const game = gameboardFactory();
+    const x = 1;
+    const y = 2;
+    game.place(1, [x, y], "v");
+    expect(game.loc(x, y)).toBe(game.board[y][x]);
 })
 
 test('can hit ship', () => {
     const game = gameboardFactory();
     game.place(2, [5, 5], "h");
     game.receiveHit(6, 5);
-    expect(game.board[6][5].ship.hits[1]).toBe(1);
+    expect(game.loc(6, 5).ship.hits[1]).toBe(1);
 })
 
 test('hit can miss', () => {
@@ -40,7 +70,7 @@ test('game can report on all ships being sunk', () => {
 
 test('place refuses out of bounds placement', () => {
     const game = gameboardFactory();
-    expect(() => {game.place(1, [9, 9])}).toThrow();
+    expect(() => {game.place(3, [9, 9])}).toThrow();
     expect(() => {game.place(2, [1, 9])}).toThrow();
 })
 

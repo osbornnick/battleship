@@ -12,8 +12,16 @@ class Game {
         this.playerShooting = this.playerShooting.bind(this);
     }
 
+    playHumanTurn(move) {
+        this.playerShooting().move(...move, this.playerReceiving().gameboard);
+        this.toggleWhoseTurn();
+    }
+
     playAITurn() {
-        this.playerShooting().move(this.playerReceiving().gameboard)
+        this.playerShooting().move(this.playerReceiving().gameboard);
+        // console.log(this.playerReceiving());
+        // console.log(this.playerReceiving().gameboard);
+        this.toggleWhoseTurn();
     }
 
     toggleWhoseTurn() {

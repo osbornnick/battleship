@@ -34,7 +34,7 @@ class AI {
 
     move(enemyGameboard) {
         const choice = randomChoice(this.possibleMoves);
-        enemyGameboard.receiveHit(choice);
+        enemyGameboard.receiveHit(...choice);
         this.moves.push(choice);
         this.possibleMoves = removeFromArray(this.possibleMoves, choice);
     }

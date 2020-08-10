@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
-const PubSub = require('PubSub');
-
-let pubsub = new PubSub();
+import {arrayInArray} from '../arrayUtilities.js'
 
 export function MyBoard(props) {
-    const board = props.player.gameboard;
+    const board = props.board;
     let cells = [];
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
-            cells.push(<Cell id={[j, i]} key={[j,i]} ship={board.loc(j, i)}/>)
+            let missed = arrayInArray(board.misses, [j, i]);
+            cells.push(<Cell id={[j, i]} key={[j,i]} ship={board.loc(j, i)} missed={missed}/>)
         }
     }
     return (
@@ -21,24 +20,30 @@ export function MyBoard(props) {
 }
 
 function Cell(props) {
-    const ship = props.ship.ship
-    const [hit, setHit] = useState(false);
+    const {ship, indexInShip} = props.ship;
+    let hit = false;
     if (ship) {
-        return (
-            <div className="hover:bg-gray-400 bg-indigo-300"></div>
-            )
-        }
+        hit = ship.hits[indexInShip];
+    }
+    if (hit) {
+        return <Hit />
+    } else if (props.missed) {
+        return <Miss />
+    } else if (ship) {
+        return <div className="hover:bg-gray-400 bg-indigo-300"></div>
+    }
     return (
         <div className="hover:bg-gray-400 bg-white"></div>
         )   
     }
 
 export function EnemyBoard(props) {
-    const board = props.player.gameboard;
+    const board = props.board;
     let cells = []
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
-            cells.push(<EnemyCell id={[j, i]} key={[j, i]} ship={board.loc(j, i)} game={props.game} pubsub={props.pubsub}/>)
+            let missed = board.misses.includes([j, i]);
+            cells.push(<EnemyCell id={[j, i]} key={[j, i]} ship={board.loc(j, i)} missed={missed} pubsub={props.pubsub} whoseTurn={props.whoseTurn}/>)
         }
     }
     return (
@@ -51,38 +56,38 @@ export function EnemyBoard(props) {
 }
 
 function EnemyCell(props) {
-    const [hit, setHit] = useState(0);
     const ship = props.ship.ship;
+    const [hit, setHit] = useState(false);
+    const [miss, setMiss] = useState(false);
+    
     const handleClick = (e) => {
-        if (props.game.whoseTurn === 1) {
-            const [x, y] = props.id;
+        if (props.whoseTurn === 1) {
+            props.pubsub.publish('user_move', {move: props.id});
             if (ship) {
-                setHit(1);
+                setHit(true);
             } else {
-                setHit(-1)
+                setMiss(true)
             }
-            props.pubsub.publish('user_move');
-            props.game.toggleWhoseTurn();
         }
     }
-    if (hit === 1) {
+    if (hit) {
         return <Hit />
-    } else if (hit === -1) {
+    } else if (miss) {
         return <Miss />
     } else {
-        return <div className="hover:bg-gray-400 bg-white" onClick={handleClick}></div>;
+        return <div className="hover:bg-gray-400 bg-white cursor-pointer" onClick={handleClick}></div>;
 
     }
 }
 
 function Hit() {
     return (
-        <div className="hover:bg-red-300 bg-red-400"></div>
+        <div className="bg-red-400"></div>
     )
 }
 
 function Miss() {
     return (
-        <div className="hover:bg-gray-300 bg-gray-400"></div>
+        <div className="bg-gray-400"></div>
     )
 }

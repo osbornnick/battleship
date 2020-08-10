@@ -5,16 +5,18 @@ import Header from './Components/Header';
 import Run from './gameRunner.js';
 import PubSub from 'PubSub';
 
+const pubsub = new PubSub();
+const game = Run(pubsub);
+console.log("game created");
+
 export default function App() {
+
     const [playing, setPlaying] = useState(false);
-    const pubsub = new PubSub();
-    const game = Run(pubsub);
-    
 
     return (
         <div className="container mx-auto flex flex-col">
             <Header />
-            <Battleship game={game} playing={playing} pubsub={pubsub}/>
+            <Battleship playing={playing} game={game} pubsub={pubsub}/>
             <Console playing={playing} setPlaying={setPlaying}/>
         </div>
     )

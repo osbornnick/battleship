@@ -57,7 +57,8 @@ test('can hit ship', () => {
 test('hit can miss', () => {
     const game = new Gameboard();
     game.receiveHit(0, 0);
-    expect(game.misses[0]).toStrictEqual([0, 0])
+    game.receiveHit(1, 0);
+    expect(game.misses[0]).toEqual([0, 0]);
 })
 
 test('game can report on all ships being sunk', () => {

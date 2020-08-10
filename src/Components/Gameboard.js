@@ -60,6 +60,7 @@ function EnemyCell(props) {
     const [hit, setHit] = useState(false);
     const [miss, setMiss] = useState(false);
     
+    // needs to call setGame?
     const handleClick = (e) => {
         if (props.whoseTurn === 1) {
             props.pubsub.publish('user_move', {move: props.id});

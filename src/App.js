@@ -11,6 +11,9 @@ console.log("game created");
 
 export default function App() {
 
+    const [game, setGame] = useState(game);
+    // vs const [game, setGame] = useState(Run(pubsub));
+
     const [playing, setPlaying] = useState(false);
 
     return (

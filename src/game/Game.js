@@ -12,15 +12,59 @@ class Game {
         this.playerShooting = this.playerShooting.bind(this);
     }
 
-    playHumanTurn(move) {
-        this.playerShooting().move(...move, this.playerReceiving().gameboard);
+    static deserialize({player, enemy, whoseTurn}) {
+        const game = new Game();
+        game.players[0].moves = player.moves;
+        game.players[0].gameboard.misses = player.board.misses;
+        game.players[0].gameboard.ships = player.board.ships;
+        game.players[0].gameboard.grid = player.board.grid;
+
+        game.players[1].moves = enemy.moves;
+        game.players[1].gameboard.misses = enemy.board.misses;
+        game.players[1].gameboard.ships = enemy.board.ships
+        game.players[1].gameboard.grid = enemy.board.grid;
+
+        game.whoseTurn = whoseTurn;
+        return game
+    }
+
+    serialize() {
+        return {
+            player: {
+                board: {
+                    misses: this.players[0].gameboard.misses,
+                    ships: this.players[0].gameboard.ships,
+                    grid: this.players[0].gameboard.grid,
+                },
+                moves: this.players[0].moves
+            },
+            enemy: {
+                board: {
+                    misses: this.players[1].gameboard.misses,
+                    ships: this.players[1].gameboard.ships,
+                    grid: this.players[1].gameboard.grid,
+                },
+                moves: this.players[1].moves
+            },
+            whoseTurn: this.whoseTurn,
+        }
+    }
+
+    playTurn(move) {
+        if (this.whoseTurn === 1) {
+            this.playHumanTurn(move);
+        } else {
+            this.playAITurn();
+        }
+    }
+
+    playHumanTurn(pos) {
+        this.playerShooting().move(...pos, this.playerReceiving().gameboard);
         this.toggleWhoseTurn();
     }
 
     playAITurn() {
         this.playerShooting().move(this.playerReceiving().gameboard);
-        // console.log(this.playerReceiving());
-        // console.log(this.playerReceiving().gameboard);
         this.toggleWhoseTurn();
     }
 
@@ -34,6 +78,13 @@ class Game {
 
     playerShooting() {
         return this.players.find(player => player.order === this.whoseTurn)
+    }
+
+    isOver() {
+        if (this.players[0].gameboard.isGameOver() || this.players[1].gamebaord.isGameOver()) {
+            return true;
+        }
+        return false;
     }
 
     initializeBoard(gameboard) {

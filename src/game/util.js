@@ -10,4 +10,14 @@ function createArray(length) {
     return arr;
 }
 
-module.exports = { createArray };
+function createBoard() {
+    let board = createArray(10, 10);
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            board[j][i] = {ship: false, indexInShip: null}
+        }   
+    }
+    return board
+}
+
+module.exports = { createArray, createBoard };

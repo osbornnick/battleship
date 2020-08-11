@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {arrayInArray} from '../arrayUtilities.js'
+import {arrayInArray} from '../game/arrayUtilities.js'
 
 export function MyBoard(props) {
     const board = props.board;
@@ -7,7 +7,7 @@ export function MyBoard(props) {
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
             let missed = arrayInArray(board.misses, [j, i]);
-            cells.push(<Cell id={[j, i]} key={[j,i]} ship={board.loc(j, i)} missed={missed}/>)
+            cells.push(<MyCell id={[j, i]} key={[j,i]} ship={board.grid[i][j]} missed={missed}/>)
         }
     }
     return (
@@ -19,15 +19,14 @@ export function MyBoard(props) {
     )
 }
 
-function Cell(props) {
+function MyCell(props) {
     const {ship, indexInShip} = props.ship;
-    let hit = false;
-    if (ship) {
-        hit = ship.hits[indexInShip];
-    }
+    let hit = ship ? ship.hits[indexInShip] : false
+    let miss = props.missed;
+
     if (hit) {
         return <Hit />
-    } else if (props.missed) {
+    } else if (miss) {
         return <Miss />
     } else if (ship) {
         return <div className="hover:bg-gray-400 bg-indigo-300"></div>
@@ -42,8 +41,9 @@ export function EnemyBoard(props) {
     let cells = []
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
-            let missed = board.misses.includes([j, i]);
-            cells.push(<EnemyCell id={[j, i]} key={[j, i]} ship={board.loc(j, i)} missed={missed} pubsub={props.pubsub} whoseTurn={props.whoseTurn}/>)
+            let missed = arrayInArray(board.misses, [j, i]);
+            const newCell = <EnemyCell id={[j, i]} key={[j, i]} ship={board.grid[i][j]} missed={missed} onPlayerMove={props.onPlayerMove}/>
+            cells.push(newCell);
         }
     }
     return (
@@ -56,20 +56,11 @@ export function EnemyBoard(props) {
 }
 
 function EnemyCell(props) {
-    const ship = props.ship.ship;
-    const [hit, setHit] = useState(false);
-    const [miss, setMiss] = useState(false);
-    
-    // needs to call setGame?
+    const {ship, indexInShip}  = props.ship;
+    let hit = ship ? ship.hits[indexInShip] : false
+    let miss = props.missed;
     const handleClick = (e) => {
-        if (props.whoseTurn === 1) {
-            props.pubsub.publish('user_move', {move: props.id});
-            if (ship) {
-                setHit(true);
-            } else {
-                setMiss(true)
-            }
-        }
+        props.onPlayerMove(props.id);
     }
     if (hit) {
         return <Hit />

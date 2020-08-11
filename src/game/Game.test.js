@@ -23,5 +23,5 @@ test('player receiving returns other player after turn switch', () => {
 test('initialize board sets locations correctly', () => {
     const g = new Game();
     g.initializeBoard(g.players[0].gameboard);
-    expect(g.players[0].gameboard.loc(6, 9).ship.length).toBe(4);
+    expect(g.players[0].gameboard.grid[9][6].ship.length).toBe(4);
 })

@@ -1,56 +1,51 @@
-const { Gameboard } = require('./Gameboard');
+const { gameboardFactory } = require('./Gameboard');
+const { arrayInArray } = require('./arrayUtilities');
 
 class Player {
     constructor(order = 1) {
-        this.gameboard = new Gameboard();
+        this.gameboard = gameboardFactory();
         this.moves = [];
         this.order = order;
         this.isAI = false;
     }
 
     move(x, y, enemyGameboard) {
-        this.moves.push([x, y])
+        this.moves.push([x, y]);
         enemyGameboard.receiveHit(x, y);
     }
 }
 
 class AI {
     constructor(order = 2) {
-        this.gameboard = new Gameboard();
-        this.possibleMoves = [];
-        this.generatePossibleMoves();
+        this.gameboard = gameboardFactory();
         this.moves = [];
         this.order = order;
         this.isAI = true;
     }
 
     generatePossibleMoves() {
+        let possibleMoves = []
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
-                this.possibleMoves.push([i, j]);
+                if (!arrayInArray(this.moves, [i, j])) {
+                    possibleMoves.push([i, j]);
+                }
             }
         }
+        return possibleMoves;
     }
 
     move(enemyGameboard) {
-        const choice = randomChoice(this.possibleMoves);
+        const possibleMoves = this.generatePossibleMoves();
+        const choice = randomChoice(possibleMoves);
         enemyGameboard.receiveHit(...choice);
         this.moves.push(choice);
-        this.possibleMoves = removeFromArray(this.possibleMoves, choice);
     }
 
 }
 
 function randomChoice(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function removeFromArray(arr, ele) {
-    const i = arr.indexOf(ele);
-    if (i > -1) {
-        arr.splice(i, 1);
-    }
-    return arr
 }
 
 module.exports = {

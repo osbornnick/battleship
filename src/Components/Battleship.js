@@ -12,14 +12,14 @@ export default function Battleship(props) {
     const enemyBoard = game.enemy.board;
     const onPlayerMove = (move) => {
         // make player and AI move
-        const playerMoved = playTurn(game, move)
+        const playerMoved = playTurn(game, move);
         const aiMoved = playTurn(playerMoved);
         setGame(aiMoved);
     };
     return (
         <div className="flex justify-around">
-            <MyBoard board={myBoard}/>
-            <EnemyBoard board={enemyBoard} onPlayerMove={onPlayerMove}/>
+            <MyBoard board={myBoard} />
+            <EnemyBoard board={enemyBoard} onPlayerMove={onPlayerMove} />
         </div>
     )
 }

@@ -11,7 +11,7 @@ class Player {
 
     move(x, y, enemyGameboard) {
         this.moves.push([x, y]);
-        enemyGameboard.receiveHit(x, y);
+        return enemyGameboard.receiveHit(x, y);
     }
 }
 
@@ -38,8 +38,8 @@ class AI {
     move(enemyGameboard) {
         const possibleMoves = this.generatePossibleMoves();
         const choice = randomChoice(possibleMoves);
-        enemyGameboard.receiveHit(...choice);
         this.moves.push(choice);
+        return enemyGameboard.receiveHit(...choice);
     }
 
 }

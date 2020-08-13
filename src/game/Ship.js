@@ -1,6 +1,7 @@
-const shipFactory = (length) => ({
+const shipFactory = (length, orientation) => ({
     length,
     hits: new Array(length).fill(0),
+    orientation: orientation,
     hit(position) {
         if (position > this.length) {
             throw new Error(`${position} out of range on ship with length ${this.length}`)

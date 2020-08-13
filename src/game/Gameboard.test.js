@@ -74,3 +74,12 @@ test('cant place on occupied cell', () => {
     game.place(2, [1, 1]);
     expect(() => game.place(1, [1, 2])).toThrow();
 })
+
+test('can move ship', () => {
+    const game = gameboardFactory();
+    game.place(2, [1, 1], "v");
+    game.move([1, 1], [5, 1]);
+    expect(game.grid[1][1].ship).toBeFalsy();
+    expect(game.grid[2][5].ship).toBeTruthy();
+    expect(game.grid[1][5].ship).toBeTruthy();
+})

@@ -4,8 +4,9 @@ test('ship has length, hits, and sunk', () => {
     const expectedShip = {
         length: 1,
         hits: [0],
+        orientation: "v"
     }
-    expect(shipFactory(1)).toMatchObject(expectedShip)
+    expect(shipFactory(1, "v")).toMatchObject(expectedShip)
 })
 
 test('ship can be hit', () => {

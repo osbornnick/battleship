@@ -51,21 +51,23 @@ class Game {
     }
 
     playTurn(move) {
+        let hit;
         if (this.whoseTurn === 1) {
-            this.playHumanTurn(move);
+            hit = this.playHumanTurn(move);
         } else {
-            this.playAITurn();
+            hit = this.playAITurn();
+        }
+        if (!hit) {
+            this.toggleWhoseTurn();
         }
     }
 
     playHumanTurn(pos) {
-        this.playerShooting().move(...pos, this.playerReceiving().gameboard);
-        this.toggleWhoseTurn();
+        return this.playerShooting().move(...pos, this.playerReceiving().gameboard);
     }
 
     playAITurn() {
-        this.playerShooting().move(this.playerReceiving().gameboard);
-        this.toggleWhoseTurn();
+        return this.playerShooting().move(this.playerReceiving().gameboard);
     }
 
     toggleWhoseTurn() {

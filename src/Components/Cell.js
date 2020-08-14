@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import {ItemTypes} from '../constants';
 
 
 export function MyCell(props) {
@@ -11,11 +13,9 @@ export function MyCell(props) {
     } else if (miss) {
         return <Miss />
     } else if (ship) {
-        return <div className="bg-indigo-300"></div>
+        return <Ship id={props.id}/>
     }
-    return (
-        <div className="bg-white"></div>
-        )   
+    return <Empty handleMoveShip={props.handleMoveShip} canMoveShip={props.canMoveShip} id={props.id}/> 
     }
 
 export function EnemyCell(props) {
@@ -45,4 +45,33 @@ function Miss() {
     return (
         <div className="bg-gray-400"></div>
     )
+}
+
+function Ship(props) {
+    const [{ isDragging }, drag] = useDrag({
+        item: { id: props.id, type: ItemTypes.SHIP },
+        collect: (monitor) => ({
+          isDragging: !!monitor.isDragging()
+        })
+      })
+
+    return (<div 
+    ref={drag} 
+    style={{opacity: isDragging? 0.5: 1, cursor: 'move'}}
+    className="bg-indigo-300"></div>)
+}
+
+function Empty(props) {
+    const {handleMoveShip, canMoveShip} = props;
+    const [{ isOver, canDrop }, drop] = useDrop({
+        accept: ItemTypes.SHIP,
+        drop: (item) => handleMoveShip(item.id, props.id),
+        canDrop: (item) => canMoveShip(item.id, props.id),
+        collect: (mon) => ({
+            isOver: !!mon.isOver(),
+            canDrop: !!mon.canDrop()
+        })
+    })
+
+    return <div ref={drop} className="bg-white"></div>
 }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {arrayInArray} from '../game/arrayUtilities.js'
 import {MyCell, EnemyCell} from './Cell';
 
@@ -8,7 +8,7 @@ export function MyBoard(props) {
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
             let missed = arrayInArray(board.misses, [j, i]);
-            cells.push(<MyCell id={[j, i]} key={[j,i]} ship={board.grid[i][j]} missed={missed}/>)
+            cells.push(<MyCell id={[j, i]} key={[j,i]} ship={board.grid[i][j]} missed={missed} canMoveShip={props.canMoveShip} handleMoveShip={props.handleMoveShip}/>)
         }
     }
     return (
